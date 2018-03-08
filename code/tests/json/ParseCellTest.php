@@ -99,7 +99,91 @@ class ParseCellTest extends PHPUnit_Framework_TestCase
         $input = "{}";
         $output = 1;
 
-        self::assertTrue(findNextValueInSameLayer($input, 0) == 1);
+        self::assertTrue(findNextValueInSameLayer($input, 1) == $output);
+
+        $input = "{[][][]{}}";
+        $output = 9;
+
+        self::assertTrue(findNextValueInSameLayer($input, 1) == $output);
+
+        $input = "{{{[]}}}";
+        $output = 7;
+
+        self::assertTrue(findNextValueInSameLayer($input, 1) == $output);
+
+        $input = "{{},[]}";
+        $output = 3;
+
+        self::assertTrue(findNextValueInSameLayer($input, 1) == $output);
+        $input = "{{\",\"},[]}";
+        $output = 6;
+
+        self::assertTrue(findNextValueInSameLayer($input, 1) == $output);
     }
 
+    function testGetAllTokensForLayer(){
+        $input = "{token1,token2,token3}";
+        $output = ["token1","token2","token3"];
+
+
+        self::assertTrue(getAllTokensForLayer($input) == $output);
+
+        $input = "{token1,[token2],{token3}}";
+        $output = ["token1","[token2]","{token3}"];
+
+
+        self::assertTrue(getAllTokensForLayer($input) == $output);
+
+        $input = "{token1,\"key\":\"value\",token3}";
+        $output = ["token1","\"key\":\"value\"","token3"];
+
+
+        self::assertTrue(getAllTokensForLayer($input) == $output);
+    }
+
+    function testGetLayerType(){
+        $input = "{}";
+        $output = "MAP";
+
+        self::assertTrue($output == getLayerType($input));
+
+        $input = "[]";
+        $output = "ARRAY";
+
+        self::assertTrue($output == getLayerType($input));
+
+        $input = "\"key\":value";
+        $output = "PRIMITIVE";
+
+        self::assertTrue($output == getLayerType($input));
+
+    }
+
+    function testGetValueForMap(){
+        $input = "{\"key1\":value1,\"key2\":{value2}}";
+
+        self::assertTrue(getValueForMap($input, "notAKey") == null);
+        self::assertTrue(getValueForMap($input, "key1") == "value1");
+        self::assertTrue(getValueForMap($input, "key2") == "{value2}");
+
+
+    }
+
+    function testAssertGoogleChartJSONValid(){
+        $json = "{
+  \"cols\": [
+        {\"id\":\"\",\"label\":\"Topping\",\"pattern\":\"\",\"type\":\"string\"},
+        {\"id\":\"\",\"label\":\"Slices\",\"pattern\":\"\",\"type\":\"number\"}
+      ],
+  \"rows\": [
+        {\"c\":[{\"v\":\"Mushrooms\",\"f\":null},{\"v\":3,\"f\":null}]},
+        {\"c\":[{\"v\":\"Onions\",\"f\":null},{\"v\":1,\"f\":null}]},
+        {\"c\":[{\"v\":\"Olives\",\"f\":null},{\"v\":1,\"f\":null}]},
+        {\"c\":[{\"v\":\"Zucchini\",\"f\":null},{\"v\":1,\"f\":null}]},
+        {\"c\":[{\"v\":\"Pepperoni\",\"f\":null},{\"v\":2,\"f\":null}]}
+      ]}";
+
+        //$json = "{}";
+        self::assertTrue(assertGoogleChartJSONValid($json));
+    }
 }

@@ -7,6 +7,8 @@
  */
 
 
+//LAYER TYPES
+
 function findNextUnescapedQuote($string, $startIndex, $upperIndexBound){
     $i = $startIndex;
     if(strlen($string) < $upperIndexBound){
@@ -152,14 +154,11 @@ function isBracketConjugate($char1, $char2){
     }
 }
 
-//Assumes that it starts on the first character past the previous delimeter and or openning bracket
+//Assumes that it starts on the first character past the previous delimeter
+//NEVER START ON THE OPENNING BRACE OF A LAYER
 function findNextValueInSameLayer($string, $start){
     $braceStack = [];
     $braceIndex = -1;//points at the top of the stack
-    if($string[$start] == '{' || ){
-        //HOW TO DIFFERENTIATE AN OPPENNING bracket being a value on this layer, or the openning brace
-        //of this layer?
-    }
 
     for($i = $start; $i < strlen($string); $i++){
         switch ($string[$i]){
@@ -170,11 +169,9 @@ function findNextValueInSameLayer($string, $start){
                 break;
             case '}':
             case ']':
-                echo isBracketConjugate($braceStack[$braceIndex], $string[$i])."\n";
-                echo $braceIndex."\n";
                 if($braceIndex >= 0 && isBracketConjugate($braceStack[$braceIndex], $string[$i])){
                     $braceIndex--;
-                }elseif($braceIndex == -1 && isBracketConjugate($braceStack[$braceIndex], $string[$i])){
+                }elseif($braceIndex == -1){
                     return $i;
                 }else{
                     throw new UnexpectedValueException("bracket mismatch");
@@ -198,6 +195,69 @@ function findNextValueInSameLayer($string, $start){
     throw new OutOfBoundsException("End of string reached without finding value delimeter");
 }
 
+function inclusiveSubstring($string, $start, $end){
+    $subString = "";
+    for($i = $start; $i <= $end; $i++){
+        $subString = $subString.$string[$i];
+    }
+    return $subString;
+}
+
+//Layer should start with { or [, and end with },]
+//Returns an array of strings for each value in the layer
+function getAllTokensForLayer($layer){
+    $tokens = [];
+    $token_index = 0;
+
+    for($i = 1; $i< strlen($layer); $i++){
+        $j = findNextValueInSameLayer($layer, $i);
+        $tokens[$token_index++] = inclusiveSubstring($layer, $i, $j-1);//remove ,
+        $i = $j;//pass delimeter on loop
+    }
+    return $tokens;
+}
+
+//ONE OF: PRIMITIVE, MAP, ARRAY
+//Input layer should have all non-delimited whitespace removed
+function getLayerType($layer){
+    switch ($layer[0]){
+        case '{':
+            return "MAP";
+            break;
+        case '[':
+            return "ARRAY";
+            break;
+        default:
+            return "PRIMITIVE";
+    }
+
+}
+
+
+
+//$layer must be of type MAP
+//IF NOT SUCH KEY RETURN null
+//$key does not have surrounding quotes
+//Assumes no excess whitespace
+function getValueForMap($layer, $key){
+    for($i = 1; $i < strlen($layer); $i++){
+        if($layer[$i] == '"'){
+            $j = findNextUnescapedQuote($layer, $i+1, strlen($layer));
+            $K = inclusiveSubstring($layer, $i+1, $j-1);
+            $i = $j+2;//Move past :
+            $j = findNextValueInSameLayer($layer,$i);
+
+            if($K == $key){//MATCH
+                return inclusiveSubstring($layer, $i, $j-1);
+            }
+            $i = $j;
+        }
+    }
+
+    return null;
+}
+
+
 function prepareJSONForValidation($json){
     try {
         $json = deleteWhitespaceNotQuoted($json, '"');
@@ -205,6 +265,43 @@ function prepareJSONForValidation($json){
         throw new OutOfBoundsException("Failed to find a closing quote for a string value");
     }
     return $json;
+}
+
+//TODO: MAKE the tests more robust and indepth
+function assertGoogleChartJSONValid($json){
+
+    $json = prepareJSONForValidation($json);
+    Assert(getLayerType($json) == "MAP");
+
+    $cols = getValueForMap($json, "cols");
+    $rows = getValueForMap($json, "rows");
+    Assert(getLayerType($cols) == "ARRAY");
+    Assert(getLayerType($rows) == "ARRAY");
+
+    $cols_tokens = getAllTokensForLayer($cols);
+    $numberOfColumns = 0;
+    foreach($cols_tokens as $col){
+        $numberOfColumns++;
+        Assert(getLayerType($col) == "MAP");
+        //TODO: CHECK FOR SPECIFIC KEYS IN EACH COLUMN
+    }
+
+
+    $rows_tokens = getAllTokensForLayer($rows);
+
+    foreach($rows_tokens as $row){
+        Assert(getLayerType($row) == "MAP");
+        $r_i = getValueForMap($row, "c");
+        Assert(getLayerType($r_i) == "ARRAY");
+        $r_i_tokens = getAllTokensForLayer($r_i);
+        Assert(sizeof($r_i_tokens) == $numberOfColumns);
+        foreach($r_i_tokens as $r_i_token){
+            Assert(getLayerType($r_i_token) == "MAP");
+            //TODO: GO DEEPER AND CHECK THE KEYS k, f, p
+        }
+    }
+
+    return true;
 }
 
 
