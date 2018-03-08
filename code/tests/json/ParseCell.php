@@ -101,6 +101,27 @@ function deleteWhitespace($string){
     return $output;
 }
 
+function deleteWhitespaceNotQuoted($string){
+    $output = "";
+    for($i = 0; $i < strlen($string); $i++){
+        if($string[$i] == '"'){
+            $j = findNextUnescapedQuote($string, $i+1, strlen($string));
+            if($j == -1){//No such string
+                throw new OutOfBoundsException("End Of String Reached Without Quote");
+            }
+            for($k = $i; $k <= $j; $k++){
+                $output = $output.$string[$k];
+            }
+            $i = $j;
+        }elseif(isWhiteSpace($string[$i])){
+            //pass it by
+        }else{
+           $output = $output.$string[$i];
+        }
+    }
+    return $output;
+}
+
 function isWhiteSpace($char){
     $whiteSpaceCharacters = "\0\t\n\x0B\r ";
 
@@ -112,8 +133,78 @@ function isWhiteSpace($char){
     return false;
 }
 
+function isBracketConjugate($char1, $char2){
+    switch ($char1){
+        case '[':
+            return $char2 == ']';
+            break;
+        case '{':
+            return $char2 == '}';
+            break;
+        case ']':
+            return $char2 == '[';
+            break;
+        case '}':
+            return $char2 == "{";
+            break;
+        default:
+            return false;
+    }
+}
+
+//Assumes that it starts on the first character past the previous delimeter and or openning bracket
+function findNextValueInSameLayer($string, $start){
+    $braceStack = [];
+    $braceIndex = -1;//points at the top of the stack
+    if($string[$start] == '{' || ){
+        //HOW TO DIFFERENTIATE AN OPPENNING bracket being a value on this layer, or the openning brace
+        //of this layer?
+    }
+
+    for($i = $start; $i < strlen($string); $i++){
+        switch ($string[$i]){
+            case '{':
+            case '[':
+                $braceIndex++;
+                $braceStack[$braceIndex] = $string[$i];
+                break;
+            case '}':
+            case ']':
+                echo isBracketConjugate($braceStack[$braceIndex], $string[$i])."\n";
+                echo $braceIndex."\n";
+                if($braceIndex >= 0 && isBracketConjugate($braceStack[$braceIndex], $string[$i])){
+                    $braceIndex--;
+                }elseif($braceIndex == -1 && isBracketConjugate($braceStack[$braceIndex], $string[$i])){
+                    return $i;
+                }else{
+                    throw new UnexpectedValueException("bracket mismatch");
+                }
+                break;
+            case ',':
+                if($braceIndex == -1){
+                    return $i;
+                }
+                break;
+            case '"':
+                $i = findNextUnescapedQuote($string, $i+1, strlen($string));
+                if($i == -1){
+                    throw new OutOfBoundsException("No closing quote found");
+                }
+                break;
+
+            default:
+        }
+    }
+    throw new OutOfBoundsException("End of string reached without finding value delimeter");
+}
+
 function prepareJSONForValidation($json){
-    $json = replaceQuoteDelimitedStrings($json, '"');
-    $json = deleteWhitespace($json);
+    try {
+        $json = deleteWhitespaceNotQuoted($json, '"');
+    }catch (OutOfBoundsException $e){
+        throw new OutOfBoundsException("Failed to find a closing quote for a string value");
+    }
     return $json;
 }
+
+

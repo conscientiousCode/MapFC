@@ -77,9 +77,29 @@ class ParseCellTest extends PHPUnit_Framework_TestCase
 
     function testPrepareJSONForValidation(){
         $input = "{f:\"STRING\",  \nv:\"ANOTHER STRING\"}";
-        $output = "{f:\",v:\"}";
+        $output = "{f:\"STRING\",v:\"ANOTHER STRING\"}";
 
         self::assertTrue($output == prepareJSONForValidation($input));
+    }
+
+    function testDeleteWhitespaceNotQuoted(){
+        $input = "Every Space \n And New Line Should Be \t Gone";
+        $output = "EverySpaceAndNewLineShouldBeGone";
+
+        self::assertTrue($output == deleteWhitespaceNotQuoted($input));
+
+        $input = "Not \nAll \"White \tSpace Will\" Be Spared";
+        $output = "NotAll\"White \tSpace Will\"BeSpared";
+
+        self::assertTrue($output == deleteWhitespaceNotQuoted($input));
+
+    }
+
+    function testFindNextValueInSameLayer(){
+        $input = "{}";
+        $output = 1;
+
+        self::assertTrue(findNextValueInSameLayer($input, 0) == 1);
     }
 
 }
