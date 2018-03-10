@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <!-- Loading the JQuery library for easy AJAX requests -->
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <!-- Loading Google Fonts for lettering that doesn't look like garbage -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <!-- Preloading the Google Charts library -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <!-- Referencing local CSS -->
+  <link rel="stylesheet" type="text/css" href="css/example.css"> 
+  <title>Team Member Info and Stats</title>
+</head>
+<body>
+  <h1>TEAM MEMBER INFO AND STATS</h1>
+  <h2>MEMBERS</h2>
+  <div id="member-wrapper">
+  </div>  
+  <script>
+    //Submitting an AJAX request for member info
+    //AJAX JQuery Post explanation:
+    //  -> $.post([URL you're posting to], [data], [callback function])
+    //Check the JQuery docs for more info.
+    $.post( "/api/exampleRestRequest.php", { req:"teamInfo" }, function(data) {
+      //Process the results from your request here. This is one of two ways to
+      //use the callback function in the POST function. The second AJAX function
+      //demonstrates the other method of usage.
+      
+      //Parsing the string form JSON into usable JSON
+      try {
+        data = JSON.parse(data);
+      } catch(e) {
+        console.log("JSON PARSE ERROR: " + e);
+        data = null;
+      }
+      
+      //Checking we were able to successfully parse
+      if( data != null) {
+        //Must use Object.keys().length to get JSON length
+        var count = Object.keys(data).length;
+        
+        //Looping through JSON results to generate member boxes
+        for(var i = 0; i < count; i++) {
+          //Determining which image to serve for member
+          var name = data[i]["name"];
+          var image = null;
+          switch(name) {
+            case "Dan H.":
+              image = "danh";
+              break;
+            case "Dan S.":
+              image = "dans";
+              break;
+            case "Jeff":
+              image = "jeff";
+              break;
+            case "Justin":
+              image = "justin";
+              break;
+            case "Reece":
+              image = "reece";
+              break;
+            case "Thomas":
+              image = "thomas";
+              break;
+            case "Zachariah":
+              image = "zach";
+              break;
+          }
+          
+          //Appending new member html to page
+          $("#member-wrapper").append("<div class='member-box "+name+"'>\
+              <img src='imgs/"+image+".jpg'>\
+              <h3>"+name+"</h3>\
+              <p><strong>Description: </strong>"+data[i]["desc"]+"</p>\
+              <p><strong>Position: </strong>"+data[i]["position"]+"</p>\
+            </div>");
+        }
+      }
+    });
+  </script>
+  <h2>STATISTICS</h2>
+  <div id="chart_div"></div>
+  <script>
+    // Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+    
+    //This is the other, more robust method for utilizing the callback process
+    //The function name is supplied in the AJAX request. When it gets data back,
+    //the AJAX function calls this function and passes the data in.
+    //Feel free to use the other method if you've got a shorter bit of code.  
+    function drawChart() {
+      //Another version of an AJAX POST Request. For docs on JSON formatting for dataTables:
+      //https://developers.google.com/chart/interactive/docs/reference#dataparam
+      //https://developers.google.com/chart/interactive/docs/php_example
+      var jsonData = $.ajax({
+        type: "POST",
+        url: "/api/exampleRestRequest.php",
+        data: { req:"teamPLevel" },
+        dataType: "json",
+        async: false //IMPORTANT: Means the code will wait for this to complete
+        }).responseText;
+      try {
+        var jsonData = JSON.parse(jsonData);
+      } catch(e) {
+        console.log("JSON PARSE ERROR: " + e);
+        jsonData = null;
+      }
+      
+      if(jsonData != null) {
+        //WARNING: ARRAY HELL FOR THIS SECTION. DO NOT COPY.
+        //Had to reform the JSON into arrays due to poor planning in the PHP.
+        //Please refer to the docs above to ensure you use better formatting.
+        var count = Object.keys(jsonData).length;
+        var dataArray = [];
+        var header = ["Members", "Power Level"];
+        dataArray.push(header);
+        for(var i = 0; i < count; i++) {
+          var tempArr = [];
+          tempArr.push(jsonData[i]["name"]);
+          tempArr.push(parseInt(jsonData[i]["powerlevel"]));
+          dataArray.push(tempArr);
+        }
+        
+        // Create our data table out of JSON data loaded from server.
+        var data = google.visualization.arrayToDataTable(dataArray);
+        
+        //Chart options
+        var options = {
+          title: "Group Member Power Levels",
+          height: 800,
+          legend: { position: "none" },
+          colors: ["#000"]
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    }
+  </script>
+</body>
+</html>

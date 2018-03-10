@@ -1,0 +1,149 @@
+/***********************************************/
+/** Material Design Header Stylings **/
+/***********************************************/
+.mdl-layout__header-row {
+  background-color: white;
+  color: #777;
+}
+
+.mdl-layout__header {
+  background-color: white;
+}
+
+.mdl-layout__header .mdl-layout__drawer-button {
+  margin-top: 0;
+  height: 44px;
+}
+
+/***********************************************/
+/** Material Design Card Stylings **/
+/***********************************************/
+
+.mdl-card {
+  margin: 0.5em;
+  min-height: 10em;
+  min-width: 7em;
+  vertical-align: top;
+}
+
+@media only screen and (max-width: 20em) {
+  .mdl-card {
+    margin: 0;
+    margin-bottom: 0.5em;
+  }
+}
+
+.mdl-card__title {
+  background-color: rgb(33,150,243);
+  color: white;
+}
+
+/***********************************************/
+/** Material Design Drawer Stylings **/
+/***********************************************/
+
+/** Changing width of header on open **/
+.mdl-layout--fixed-drawer.is-upgraded:not(.is-small-screen)>.mdl-layout__header {
+  margin-left: 280px;
+}
+.mdl-layout__drawer {
+  width: 280px;
+  transform: translateX(-290px);
+}
+.mdl-layout--fixed-drawer>.mdl-layout__content {
+  margin-left: 280px;
+}
+@media screen and (max-width: 1024px) {
+  .mdl-layout--fixed-drawer>.mdl-layout__content {
+    margin-left: 0;
+  }
+}
+/** End of changing width of header on open **/
+
+.mdl-layout__header-row {
+  height: 3.5em;
+}
+
+.mdl-layout__drawer {
+  box-shadow: none;
+  padding-top: 2em;
+}
+
+.mdl-layout__drawer-button i {
+  color: #777;
+}
+
+/** List Stylings **/
+.mdl-layout__drawer ul {
+  list-style-type: none;
+  padding-top: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  font-size: 1.1em;
+  border-top: 1px solid #cfd8dc;
+  margin: 15px -16px 0;
+  padding: 16px 16px 0;
+}
+
+.mdl-layout__drawer ul:nth-child(1) {
+  border-top: none;
+  font-size: 1.5em;
+  padding-left: 0em;
+}
+
+.mdl-layout__drawer ul:nth-child(1) li a {
+  color: rgb(33,150,243) !important;
+}
+
+.mdl-layout__drawer ul li {
+  padding: 0;
+  margin: 0;
+  padding-left: 3em;
+}
+
+.mdl-layout__drawer ul li:nth-child(1) a {
+  font-weight: bold;
+  color: #757575;
+}
+
+.mdl-layout__drawer ul li a {
+  color: #212121;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mdl-layout__drawer ul li a:hover {
+  color: rgb(33,150,243);
+}
+/** End of List Stylings **/
+
+/***********************************************/
+/** Report **/
+/***********************************************/
+.report {
+  text-align: center;
+}
+
+.report>h1, .report>h2, .report>p {
+  padding-left: 7%;
+  text-align: left;
+}
+
+.report>h1 {
+  font-size: 2.3em;
+  color: #777;
+  font-weight: 300;
+}
+
+.report .mdl-card {
+  display: inline-block;
+  text-align: left;
+}
+
+.report .graph-display {
+  display: inline-block;
+  width: 90%;
+  height: 30em;
+}
