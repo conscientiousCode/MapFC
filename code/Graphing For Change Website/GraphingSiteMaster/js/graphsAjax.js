@@ -1,61 +1,195 @@
-/*******************************************************/
-//Repurpose or Erase the example code below
-/*******************************************************/
+//HEATMAP GLOBALS
+var maleHeatJson;
+var femaleHeatJson;
+var transHeatJson;
+var heatMaps = [];
+var numHeatMaps = 3;
+var heatMapsLoaded = 0;
+//RANK MAP GLOBALS
+var rankMapJSON;
 
-// Load the Visualization API and the piechart package.
+// Load the Visualization API and set callback on load
 google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(initGraphs);
 
-// Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawChart);
+//INIT AND DRAW GRAPHS HERE
+function initGraphs() {
+  
+}
 
-//This is the other, more robust method for utilizing the callback process
-//The function name is supplied in the AJAX request. When it gets data back,
-//the AJAX function calls this function and passes the data in.
-//Feel free to use the other method if you've got a shorter bit of code.  
-function drawChart() {
-  //Another version of an AJAX POST Request. For docs on JSON formatting for dataTables:
-  //https://developers.google.com/chart/interactive/docs/reference#dataparam
-  //https://developers.google.com/chart/interactive/docs/php_example
-  var jsonData = $.ajax({
+//INIT AND DRAW MAPS HERE
+function initMaps() {
+  drawHeatMaps();
+  drawRankMaps();
+}
+
+function drawHeatMaps() {
+  $.ajax({
     type: "POST",
-    url: "/api/exampleRestRequest.php",
-    data: { req:"teamPLevel" },
+    url: "/api/ServicesForGenders.php",
+    data: { req:"female" },
     dataType: "json",
-    async: false //IMPORTANT: Means the code will wait for this to complete
-    }).responseText;
-  try {
-    var jsonData = JSON.parse(jsonData);
-  } catch(e) {
-    console.log("JSON PARSE ERROR: " + e);
-    jsonData = null;
+    success: function(res){
+      console.log("Female HeatMap Loaded");
+      femaleHeatJson = res;
+      countHeatmaps();
+    },
+    error: function(e) {
+      console.log("Female Heatmap Error: " + e);
+    },
+    async: true
+  }).responseText;
+  $.ajax({
+    type: "POST",
+    url: "/api/ServicesForGenders.php",
+    data: { req:"male" },
+    dataType: "json",
+    success: function(res){
+      console.log("Male HeatMap Loaded");
+      maleHeatJson = res;
+      countHeatmaps();
+    },
+    error: function(e) {
+      console.log("Male Heatmap Error: " + e);
+    },
+    async: true
+  }).responseText;
+  $.ajax({
+    type: "POST",
+    url: "/api/ServicesForGenders.php",
+    data: { req:"transgender" },
+    dataType: "json",
+    success: function(res){
+      console.log("Transgender HeatMap Loaded");
+      transHeatJson = res;
+      countHeatmaps();
+    },
+    error: function(e) {
+      console.log("Transgender Heatmap Error: " + e);
+    },
+    async: true
+  }).responseText;
+}
+
+function countHeatmaps() {
+  
+  heatMapsLoaded++
+  if(heatMapsLoaded == numHeatMaps) {
+    heatMaps.push([femaleHeatJson, "femaleHeatmap"]);
+    heatMaps.push([maleHeatJson, "maleHeatmap"]);
+    heatMaps.push([transHeatJson, "transHeatmap"]);
+
+    initHeatMaps();
   }
+}
 
-  if(jsonData != null) {
-    //WARNING: ARRAY HELL FOR THIS SECTION. DO NOT COPY.
-    //Had to reform the JSON into arrays due to poor planning in the PHP.
-    //PLEASE FORMAT YOUR JSON INTO THE GOOGLE CHARTS JSON FORMAT ON THE REST REQUEST
-    var count = Object.keys(jsonData).length;
-    var dataArray = [];
-    var header = ["Members", "Power Level"];
-    dataArray.push(header);
-    for(var i = 0; i < count; i++) {
-      var tempArr = [];
-      tempArr.push(jsonData[i]["name"]);
-      tempArr.push(parseInt(jsonData[i]["powerlevel"]));
-      dataArray.push(tempArr);
+function initHeatMaps() {
+  try {
+    if(heatMaps.length < 1) {
+      throw "Heatmaps not loaded"
     }
+    
+    var map, heatmap;
+    for(var i = 0; i < heatMaps.length; i++) {
+      if(heatMaps[i][0] == "" || heatMaps[i][0] == null) {
+        console.log("HeatMap " + heatMaps[i][1] + " not loaded");
+      } else {
+        if(typeof heatMapJSON == 'string') {
+          var heatMapJSON = JSON.parse(heatMaps[i][0]);
+        } else {
+          var heatMapJSON = heatMaps[i][0];
+        }
+        
+        map = new google.maps.Map(document.getElementById(heatMaps[i][1]), {
+          zoom: 12,
+          center: {lat: 49.886553, lng: -119.469810},
+          gestureHandling: 'cooperative',
+          mapTypeId: google.maps.MapTypeId.HYBRID
+        });
 
-    // Create our data table out of JSON data loaded from server.
-    var data = google.visualization.arrayToDataTable(dataArray);
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: getGeoPoints(heatMapJSON),
+          map: map,
+          radius: 30
+        });
+        
+      }
+    }
+  } catch(e) {
+    console.log("HEATMAP ERROR: " + e);
+  }
+}
 
-    //Chart options
-    var options = {
-      title: "Group Member Power Levels",
-      legend: { position: "none" },
-    };
+function getGeoPoints(graphJson) {
+  var geoPoints = [];
+  for(var i=0; i<Object.keys(graphJson).length; i++)
+  {
+    geoPoints[i] = new google.maps.LatLng(graphJson[i]['lon'], graphJson[i]['lat']);
+  }
+  return geoPoints;
+}
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.ColumnChart(document.getElementById('exampleGraphDiv'));
-    chart.draw(data, options);
+function drawRankMaps() {
+  $.ajax({
+    type: "POST",
+    url: "/api/linearRankedComboGraph.php",
+    data: {},
+    dataType: "json",
+    success: function(res){
+      console.log("Rank Map Loaded");
+      rankMapJSON = res;
+      initRankMap();
+    },
+    error: function(e) {
+      console.log("Female Heatmap Error: " + e);
+    },
+    async: true
+  }).responseText;
+}
+
+function initRankMap() {
+  try {
+    if(typeof rankMapJSON != 'object' || rankMapJSON == null) {
+      throw "Rank Data is not JSON";
+    }
+    
+    if(typeof heatMapJSON == 'string') {
+      rankMapJSON = JSON.parse(heatMaps[i][0]);
+    }
+    
+    var map = new google.maps.Map(document.getElementById('serviceRank'), {
+      zoom: 12,
+      center: {lat: 49.886553, lng: -119.469810},
+      gestureHandling: 'cooperative',
+      mapTypeId: google.maps.MapTypeId.HYBRID
+    });
+    
+    for(var i = 0; i < Object.keys(rankMapJSON).length; i++) {
+      var score = rankMapJSON[i]['score'];
+      if(score <= 2.5) {
+        var color = "#FF0000";
+      } else if(score > 2.5 && score <= 5) {
+        var color = "#FF8000";
+      } else if(score > 5 && score <= 7.5) {
+        var color = "#FFFF00";
+      } else if(score > 7.5) {
+        var color = "#00FF00";
+      }
+      
+      console.log(score + " " + color);
+      
+      var siteCircle = new google.maps.Circle({
+        strokeColor: color,
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: color,
+        fillOpacity: 1.0,
+        map: map,
+        center: {lat:rankMapJSON[i]['lon'], lng:rankMapJSON[i]['lat']},
+        radius: 100
+      });
+    }
+  } catch(e) {
+    console.log("RANK MAP INIT ERROR: " + e);
   }
 }

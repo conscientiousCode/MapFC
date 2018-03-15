@@ -11,11 +11,12 @@
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   <!-- Loading local files, setting viewport, setting favicon and title -->
   <link rel="stylesheet" href="css/main.css">
-  <!----------------------------------------------------------------->
+  <!--*************************************************************-->
   <!-- Please note the graphsAjax.js This is the file you will put -->
   <!-- your AJAX requests and graph generation code. -->
-  <!----------------------------------------------------------------->
+  <!--*************************************************************-->
   <script type="text/javascript" src="js/graphsAjax.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6Wj6mZyMCcPEZiTiKm1PaP-69hvRj1HM&libraries=visualization&callback=initMaps"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="favicon.png">
   <title>Graphing for Change</title>
@@ -25,17 +26,17 @@
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <!-- Upper Header content goes here -->
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <i class="material-icons">insert_chart</i>
         <span class="mdl-layout-title">&nbsp;Graphing for Change</span>
       </div>
       <!-- Tabs -->
       <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <!-- Lower Header content goes here -->
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <a href="#scroll-tab-home" class="mdl-layout__tab is-active">Home</a>
         <a href="#scroll-tab-download" class="mdl-layout__tab">Download Report</a>
         <a href="#scroll-tab-print" class="mdl-layout__tab">Print Report</a>
@@ -45,57 +46,68 @@
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <!----------------------------------------------------------------->
+      <!--*************************************************************-->
       <!-- Sidebar content goes here -->
-      <!----------------------------------------------------------------->
+      <!--*************************************************************-->
       <ul>
         <li><a href="">Overview</a></li>
       </ul>
       <ul>
-        <li><a href="">Demographic Graphs</a></li>
-        <li><a href="">Demographic Heatmaps</a></li>
+        <li><a href="/#demGraphs">Demographic Graphs</a></li>
+        <li><a href="/#femHeat">Female Services Heatmap</a></li>
+        <li><a href="/#maleHeat">Male Services Heatmap</a></li>
+        <li><a href="/#transHeat">Transgender Services Heatmap</a></li>
+      </ul>
+      <ul>
+        <li><a href="/#servGraphs">Services Graphs</a></li>
+        <li><a href="/#servRanked">Service Ranking Diagram</a></li>
       </ul>
     </div>
     <main class="mdl-layout__content">
       <section class="mdl-layout__tab-panel is-active" id="scroll-tab-home">
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <!-- Report content goes here -->
         <!-- Please note the structure designated below -->
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <div class="page-content">
           <section class="report">
-            <h1>Demographic HeatMaps</h1>
-            <!-- This div will contain the graph. -->
-            <!-- Please rename the id string in the div to a unique name which you will -->
-            <!-- pass to the Google Charts framework to tell it about where to put your graph. -->
-            <div class="graph-display" id="exampleGraphDiv"></div>
+            <h1 id="demGraphs">Demographic Graphs</h1>
+            <h2 id="femHeat">Female Demographic Services HeatMap</h2>
+            <div class="graph-display" id="femaleHeatmap"></div>
+            <h2 id="maleHeat">Male Demographic Services HeatMap</h2>
+            <div class="graph-display" id="maleHeatmap"></div>
+            <h2 id="transHeat">Transgender Demographic Services HeatMap</h2>
+            <div class="graph-display" id="transHeatmap"></div>
+            <h1 id="servGraphs">Services Graphs</h1>
+            <h2 id="servRanked">Service Ranking Diagram</h2>
+            <div class="graph-display" id="serviceRank"></div>
           </section>
         </div>
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
         <!-- Report content ends here -->
-        <!----------------------------------------------------------------->
+        <!--*************************************************************-->
       </section>
       <section class="mdl-layout__tab-panel" id="scroll-tab-download">
         <div class="page-content">
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           <!-- Download content goes here -->
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           Download
         </div>
       </section>
       <section class="mdl-layout__tab-panel" id="scroll-tab-print">
         <div class="page-content">
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           <!-- Your content goes here -->
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           Print
         </div>
       </section>
       <section class="mdl-layout__tab-panel" id="scroll-tab-about">
         <div class="page-content">
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           <!-- Our content goes here -->
-          <!----------------------------------------------------------------->
+          <!--*************************************************************-->
           About
         </div>
       </section>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <h2>AJAX POST TESTER</h2>
+  <h3>INPUT</h3>
+  <form id="post-form">
+    <fieldset>
+      <legend>AJAX POST Request:</legend>
+      Address<br>
+      <input id="address" type="text" size="40" name="address" value="/api/ServicesForGenders.php"><br><br>
+      POST Data<br>
+      Key <input id="key" type="text" name="postKey" value="req"> Value <input id="value" type="text" name="postValue" value="male"><br><br>
+      <input type="submit" value="Submit">
+    </fieldset>  
+  </form>
+  <br>
+  <h3>OUTPUT</h3>
+  <div id="post-content">
+    <section class='post-output' id="post-result"></section>
+  </div>
+  <script>
+    var keyVal = null;
+    var value = null;
+    var address = null;
+    var json = null;
+    
+    function appendToBody(text) {
+      var cont = document.getElementById("post-result");
+      cont.innerHTML = text;
+    }
+    
+    function sendAjax(event) {
+      event.preventDefault();
+      keyVal = document.getElementById("key").value;
+      value = document.getElementById("value").value;
+      address = document.getElementById("address").value;
+      json = {};
+      json[keyVal] = value;
+      
+      var jsonData = $.ajax({
+        type: "POST",
+        url: address,
+        data: json,
+        dataType: "json",
+        async: false //IMPORTANT: Means the code will wait for this to complete
+        }).responseText;
+      try {
+        var jsonData = JSON.parse(jsonData); 
+      } catch(e) {
+        appendToBody("JSON PARSE ERROR: " + e + "<br>JSON:" + jsonData);
+        jsonData = null;
+      }
+
+      if(jsonData != null) {
+        appendToBody(JSON.stringify(jsonData));
+      }
+    }
+    
+    var form = document.getElementById("post-form");
+    form.addEventListener("submit", sendAjax);
+  </script>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+    
+    .post-output {
+      font-family: monospace;
+      font-size: 1.1em;
+    }
+  </style>
+</body>
+</html>
