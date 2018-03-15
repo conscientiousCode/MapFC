@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f1b61599-30f1-4155-9300-7ab5fb13acf8" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/php-test-framework.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/php.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/AnnualDistribution.php" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistribution.php" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistributionTest.php" />
+      <change beforePath="$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistribution.php" afterPath="$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistribution.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,8 +26,8 @@
       <file leaf-file-name="SolsticeDistribution.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistribution.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+            <state relative-caret-position="275">
+              <caret line="23" column="8" lean-forward="true" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -200,7 +196,7 @@
       <updated>1520916268946</updated>
       <workItem from="1520916270346" duration="2837000" />
       <workItem from="1520919585847" duration="2213000" />
-      <workItem from="1521139882831" duration="1209000" />
+      <workItem from="1521139882831" duration="3235000" />
     </task>
     <servers />
   </component>
@@ -237,7 +233,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6259000" />
+    <option name="totallyTimeSpent" value="8285000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="44" width="1368" height="721" extended-state="6" />
@@ -347,8 +343,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/code/Graphing For Change Website/GraphingSiteMaster/data_gen/Distributions/SolsticeDistribution.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+        <state relative-caret-position="275">
+          <caret line="23" column="8" lean-forward="true" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
           <folding />
         </state>
       </provider>
