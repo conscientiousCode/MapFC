@@ -6,8 +6,24 @@
  * Time: 9:52 PM
  */
 
-class SolsticeDistribution implements annualDistribution
+include_once 'AnnualDistribution.php';
+
+class SolsticeDistribution implements AnnualDistribution
 {
+    private $baseProb;
+    private $upperProbPerterbation;
+    private $N;//Size
+
+    public function __construct($baseProbability, $upperProbabilityPerterbation, $population){
+        $baseProb = $baseProbability;
+        $upperProbPerterbation = $upperProbabilityPerterbation;
+        $N = $population;
+    }
+
+    private function random(){
+        mt_rand()/
+    }
+
     //This distribution is bi modal with peaks ~= 1 at $x = 172, 355
     public function valueFor($x)
     {

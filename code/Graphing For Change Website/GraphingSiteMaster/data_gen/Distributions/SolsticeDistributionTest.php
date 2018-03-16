@@ -6,6 +6,9 @@
  * Time: 9:57 PM
  */
 
+
+include 'SolsticeDistribution.php';
+
 class SolsticeDistributionTest extends PHPUnit_Framework_TestCase
 {
 
@@ -13,10 +16,13 @@ class SolsticeDistributionTest extends PHPUnit_Framework_TestCase
         $solDist = new SolsticeDistribution();
 
         try{
-            $solDist.valueFor(0);
-            self::fail();
+
+            $solDist::valueFor(0);
         }catch (InvalidArgumentException $e){
-            self::pass();
+            self::assertTrue(true);
         }
     }
 }
+
+
+?>
