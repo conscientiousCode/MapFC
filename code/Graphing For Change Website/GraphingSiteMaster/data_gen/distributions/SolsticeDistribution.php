@@ -32,6 +32,8 @@ class SolsticeDistribution implements AnnualDistribution
         if($day < 1 || $day > 365){
             throw new InvalidArgumentException("$day must be in [1,365]");
         }
+
+        //(floor($N*($baseProb + random()*upperPerterb)*solsticeDayModifier))
         return floor($this->N*($this->baseProb + $this->random()*$this->upperProbPerterbation)*self::solsticeDistribution($day));
     }
 

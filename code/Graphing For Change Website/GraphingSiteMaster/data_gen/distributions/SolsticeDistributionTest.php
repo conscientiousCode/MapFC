@@ -71,7 +71,7 @@ class SolsticeDistributionTest extends PHPUnit_Framework_TestCase
         $tollerance = 0.00001;
         self::assertTrue(abs($maxObserved - SolsticeDistribution::solsticeDistribution(355)) < $tollerance);
         self::assertTrue(abs($maxObserved - SolsticeDistribution::solsticeDistribution(172)) < $tollerance);
-        
+
     }
 }
 
