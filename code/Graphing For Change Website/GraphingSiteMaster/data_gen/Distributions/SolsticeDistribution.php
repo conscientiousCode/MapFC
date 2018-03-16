@@ -15,20 +15,38 @@ class SolsticeDistribution implements AnnualDistribution
     private $N;//Size
 
     public function __construct($baseProbability, $upperProbabilityPerterbation, $population){
-        $baseProb = $baseProbability;
-        $upperProbPerterbation = $upperProbabilityPerterbation;
-        $N = $population;
+        $this->baseProb = $baseProbability;
+        $this->upperProbPerterbation = $upperProbabilityPerterbation;
+        $this->N = $population;
     }
 
-    private function random(){
-        mt_rand()/
+    //Random number between 0 and 1
+    protected function random(){
+        return mt_rand()/mt_getrandmax();
     }
 
     //This distribution is bi modal with peaks ~= 1 at $x = 172, 355
-    public function valueFor($x)
+    //Perterbation taken into account
+    public function valueForDay($day)
     {
-        if($x < 1 || $x > 365){
-            throw new InvalidArgumentException("$x must be in [1,365]");
+        if($day < 1 || $day > 365){
+            throw new InvalidArgumentException("$day must be in [1,365]");
         }
+        return floor($this->N*($this->baseProb + $this->random()*$this->upperProbPerterbation)*self::solsticeDistribution($day));
+    }
+
+    //Function ranges from ~1.0004 to ~2, with peaks at the summer and winter solstic, day 172, 355
+    public static function solsticeDistribution($day){
+        $winterSol = 355;
+        $winterSolEarlyYear = -10;//this is for when $day is near 1
+        $summerSol = 172;
+        $spread = (1/1000);
+        //These are essentially two bellcurves centered at the solstices
+        $winterAmount = exp(-$spread*pow($day-$winterSol,2));
+        $winterEarlyAmount = exp(-$spread*pow($day-$winterSolEarlyYear,2));
+        $summerAmount = exp(-$spread*pow($day-$summerSol,2));
+
+        return ($winterAmount+$winterEarlyAmount+$summerAmount) +1;
+
     }
 }
