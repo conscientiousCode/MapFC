@@ -2,6 +2,7 @@
 var maleHeatJson;
 var femaleHeatJson;
 var transHeatJson;
+var fakeYearlyViolenceJson;
 var heatMaps = [];
 var numHeatMaps = 3;
 var heatMapsLoaded = 0;
@@ -14,7 +15,45 @@ google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  
+  getDataViolenceGraph();
+}
+
+function getDataViolenceGraph() {
+  $.ajax({
+      type: "POST",
+      url: "/api/violenceOverYearFAKE.php",
+      data: { req:"null" },
+      dataType: "json",
+      success: function(res){
+          console.log("Fake Yearly Violence Loaded");
+          fakeYearlyViolenceJson = res;
+          drawViolenceGraph();
+      },
+      error: function(e) {
+          console.log("Fake Yearly Violence Error: " + e);
+      },
+      async: true
+  }).responseText;
+}
+
+function drawViolenceGraph() {
+  console.log(fakeYearlyViolenceJson);
+  var data = new google.visualization.DataTable(fakeYearlyViolenceJson);
+
+  //Chart options
+  var options = {
+      title: "Violent Incidents (FAKE DATA)",
+      vAxis: { title: "Number of Violent Events" },
+      hAxis: { title: "Day" },
+      height: 800,
+      legend: { position: "none" },
+      colors: ["#000"]
+  };
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.LineChart(document.getElementById('fakeViolenceGraph'));
+
+  chart.draw(data, options);
 }
 
 //INIT AND DRAW MAPS HERE
@@ -39,6 +78,7 @@ function drawHeatMaps() {
     },
     async: true
   }).responseText;
+
   $.ajax({
     type: "POST",
     url: "/api/ServicesForGenders.php",
@@ -54,6 +94,7 @@ function drawHeatMaps() {
     },
     async: true
   }).responseText;
+
   $.ajax({
     type: "POST",
     url: "/api/ServicesForGenders.php",
