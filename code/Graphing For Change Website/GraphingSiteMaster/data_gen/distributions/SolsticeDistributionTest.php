@@ -6,8 +6,9 @@
  * Time: 9:57 PM
  */
 
+include_once 'SolsticeDistribution.php';
 
-include 'SolsticeDistribution.php';
+
 
 class SolsticeDistributionTest extends PHPUnit_Framework_TestCase
 {

@@ -2,7 +2,7 @@
 //Including the db connection object
 //You'll probably have to play around with this to get it to work
 //with different operating systems and file/server structures
-include_once $_SERVER["DOCUMENT_ROOT"].'/code/Graphing For Change Website/GraphingSiteMaster/api/config/dbCreds.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/api/config/dbCreds.php';
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/SolsticeDistribution.php';
 
 //Handle AJAX request and POST data here
