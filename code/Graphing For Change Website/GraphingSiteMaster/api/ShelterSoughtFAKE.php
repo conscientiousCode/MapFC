@@ -19,7 +19,7 @@ function random(){
 }
 
 function waitList($day,$perterbation,$population, $spread){
-    return waitListDistribution($day,$spread)*($perterbation + random()*$population)*$population;
+    return floor(waitListDistribution($day,$spread)*($perterbation + random()*$population)*$population);
 }
 
 $shelterDesireRate = 1/10;
@@ -29,9 +29,26 @@ $population = 1500;
 $winterSol = new WinterDistribution($shelterDesireRate, $fluctuationPerDay, $population);
 
 $rows = [];
+$json =  $violenceJson = '{ "cols":[
+        {"id":"","label":"Day","pattern":"","type":"number"},
+        {"id":"","label":"Seeking","pattern":"","type":"number"},
+        {"id":"","label":"Wait Lister","pattern":"","type":"number"},
+    ], "rows":[';
+
+$comma = ",";
 
 for($i = 1; $i <= 365; $i++){
     $rows[$i] = array(
-        "seeking"=>,
-        ""=>);
+        "seeking"=> $winterSol->valueForDay($i),
+        "waiting"=> waitList($i, 1/500, $population, 20)
+    );
+
+    $json = $json.'{"c":[{"v":'.$i.'},{"v":'.$rows[$i]["seeking"].'},{"v":'.$rows[$i]["waiting"].'}]}'.$comma."\n";
+    if ($i == 364){
+        $comma = "";
+    }
 }
+
+$json = $json.']}';
+
+echo $json;
