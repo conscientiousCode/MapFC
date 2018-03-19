@@ -11,16 +11,16 @@ class GoogleJsonFormatter
     private static $JSON_OPEN = '{';
     private static $JSON_CLOSE = '}';
 
-    private static $COLS_OPEN = '{ "cols":[';
-    private static $COLS_CLOSE = ']},';
-    private static $COL_OPEN = '';
-    private static $COL_CLOSE = '';
+    private static $COLS_OPEN = '"cols":[';
+    private static $COLS_CLOSE = ']';
+    private static $COL_OPEN = '{';
+    private static $COL_CLOSE = '}';
 
-    private static $ROWS_OPEN = '';
-    private static $ROWS_CLOSE = '';
-    private static $ROW_OPEN = '';
-    private static $ROW_CLOSE = '';
-    private static $ROW_ITEM_OPEN = '';
+    private static $ROWS_OPEN = ', "rows":[';
+    private static $ROWS_CLOSE = ']}';
+    private static $ROW_OPEN = '{"c":[';
+    private static $ROW_CLOSE = ']}';
+    private static $ROW_ITEM_OPEN = '{';
     private static $ROW_ITEM_CLOSE  = '}';
 
     private $cols = [];
@@ -35,8 +35,8 @@ class GoogleJsonFormatter
         }
 
         for($i = 0; $i<= $this->cols_i; $i++){
-            if($col["name"] == $this->cols["name"]){
-               throw new InvalidArgumentException("Cannot have two columns of the same name");
+            if(array_key_exists($col["name"], $this->cols)){
+                throw new InvalidArgumentException("Cannot have two columns of the same name");
             }
         }
         $this->cols_i += 1;
@@ -47,12 +47,16 @@ class GoogleJsonFormatter
     //Row values should be in the same order as which the columns were added
     //A Row should not be null, make it the empty string instead
     public function addRow($row){
-        if(sizeof($row) +1 != $this->cols_i){
+        //echo count($row)."\n";
+        //echo $this->cols_i;
+        if(count($row) -1 != $this->cols_i){
             throw new InvalidArgumentException("this row does not have the same number of values as there are columns");
         }
         $temp = [];
         for($i = 0; $i <= $this->cols_i; $i++){
-            if($row[$i] == null){
+            //echo $i.": \t".$row[$i];
+            //echo $row[$i]."\n HELLL";
+            if(!array_key_exists($i,$row)){
                 throw new InvalidArgumentException("A row value cannot be null, make it the empty string instead");
             }
             $temp[$i] = $row[$i];
@@ -65,19 +69,40 @@ class GoogleJsonFormatter
     public function getJson(){
         assert ($this->cols_i >= 0);
         assert ($this->rows_i >= 0);
-        $returnString = self::$JSON_OPEN.self::$COLS_OPEN;
+        $json = self::$JSON_OPEN.self::$COLS_OPEN;
         $comma = ',';
         for($i = 0; $i <= $this->cols_i; $i++){
             if($i == $this->cols_i){
                 $comma = '';
             }
-            $returnString = $returnString.self::$COL_OPEN.'"id":"","label":'.$this->cols[$i]['name']
+            $json = $json.self::$COL_OPEN.'"id":"","label":'.$this->cols[$i]['name']
                 .',"pattern":"","type":'.$this->cols[$i]['type'].self::$COL_CLOSE.$comma;
         }
 
+        $json = $json.self::$COLS_CLOSE.self::$ROWS_OPEN;
 
-        
+        $commaI = ',';//Seperator for the rows
+        $commaJ = ',';//Seperator for the columns (i.e. Items in the row)
 
+        for($i = 0; $i <= $this->rows_i; $i++){
+            if($i == $this->rows_i){
+                $commaI = '';
+            }
+            $commaJ = ',';
+            $json = $json.self::$ROW_OPEN;
+            for($j = 0; $j <= $this->cols_i; $j++){
+                if($j == $this->cols_i){
+                    $commaJ = '';
+                }
+                $json = $json.self::$ROW_ITEM_OPEN.'"v":'.$this->rows[$i][$j].',"f":null'.self::$ROW_ITEM_CLOSE.$commaJ;
+            }
+            $json = $json.self::$ROW_CLOSE.$commaI;
+        }
+
+        $json = $json.self::$ROWS_CLOSE.self::$JSON_CLOSE;
+
+
+        return $json;
     }
 
 

@@ -7,6 +7,7 @@
  */
 
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/WinterDistribution.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/GoogleJsonFormatter.php';
 
 function waitListDistribution($day,$spread){
     $centre = 365;
@@ -19,7 +20,7 @@ function random(){
 }
 
 function waitList($day,$perterbation,$population, $spread){
-    return floor(waitListDistribution($day,$spread)*($perterbation + random()*$population)*$population);
+    return floor(waitListDistribution($day,$spread)*($perterbation + random())*$population);
 }
 
 $shelterDesireRate = 1/10;
@@ -28,27 +29,22 @@ $population = 1500;
 
 $winterSol = new WinterDistribution($shelterDesireRate, $fluctuationPerDay, $population);
 
-$rows = [];
-$json =  $violenceJson = '{ "cols":[
-        {"id":"","label":"Day","pattern":"","type":"number"},
-        {"id":"","label":"Seeking","pattern":"","type":"number"},
-        {"id":"","label":"Wait Lister","pattern":"","type":"number"},
-    ], "rows":[';
+$jsonFormatter = new GoogleJsonFormatter();
+$jsonFormatter->addCol(array("name"=> "day", "type"=>"number"));//0
+$jsonFormatter->addCol(array("name"=> "seeking", "type"=>"number"));//1
+$jsonFormatter->addCol(array("name"=> "waiting", "type"=>"number"));//2
 
-$comma = ",";
 
 for($i = 1; $i <= 365; $i++){
-    $rows[$i] = array(
-        "seeking"=> $winterSol->valueForDay($i),
-        "waiting"=> waitList($i, 1/500, $population, 20)
+    $row = array(
+        0=> $i,
+        1=> $winterSol->valueForDay($i),
+        2=> waitList($i, 1/500, $population, 20)
     );
+    //echo $row[0]."\n".$row[1]."\n";
 
-    $json = $json.'{"c":[{"v":'.$i.'},{"v":'.$rows[$i]["seeking"].'},{"v":'.$rows[$i]["waiting"].'}]}'.$comma."\n";
-    if ($i == 364){
-        $comma = "";
-    }
+    $jsonFormatter->addRow($row);
 }
 
-$json = $json.']}';
 
-echo $json;
+echo $jsonFormatter->getJson();
