@@ -7,7 +7,8 @@
  */
 
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/WinterDistribution.php';
-include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/GoogleJsonFormatter.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/GoogleJsonFormatter.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/JsonValidator.php';
 
 function waitListDistribution($day,$spread){
     $centre = 365;

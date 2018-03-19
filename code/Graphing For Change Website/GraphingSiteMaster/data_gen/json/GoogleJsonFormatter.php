@@ -6,8 +6,12 @@
  * Time: 10:58 AM
  */
 
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/JsonValidator.php';
+
 class GoogleJsonFormatter
 {
+    private static $TYPE_STRING = "string";
+
     private static $JSON_OPEN = '{';
     private static $JSON_CLOSE = '}';
 
@@ -17,7 +21,7 @@ class GoogleJsonFormatter
     private static $COL_CLOSE = '}';
 
     private static $ROWS_OPEN = ', "rows":[';
-    private static $ROWS_CLOSE = ']}';
+    private static $ROWS_CLOSE = ']';
     private static $ROW_OPEN = '{"c":[';
     private static $ROW_CLOSE = ']}';
     private static $ROW_ITEM_OPEN = '{';
@@ -75,14 +79,15 @@ class GoogleJsonFormatter
             if($i == $this->cols_i){
                 $comma = '';
             }
-            $json = $json.self::$COL_OPEN.'"id":"","label":'.$this->cols[$i]['name']
-                .',"pattern":"","type":'.$this->cols[$i]['type'].self::$COL_CLOSE.$comma;
+            $json = $json.self::$COL_OPEN.'"id":"","label":"'.$this->cols[$i]['name']
+                .'","pattern":"","type":"'.$this->cols[$i]['type'].'"'.self::$COL_CLOSE.$comma;
         }
 
         $json = $json.self::$COLS_CLOSE.self::$ROWS_OPEN;
 
         $commaI = ',';//Seperator for the rows
         $commaJ = ',';//Seperator for the columns (i.e. Items in the row)
+        $stringMark = "\"";
 
         for($i = 0; $i <= $this->rows_i; $i++){
             if($i == $this->rows_i){
@@ -94,14 +99,19 @@ class GoogleJsonFormatter
                 if($j == $this->cols_i){
                     $commaJ = '';
                 }
-                $json = $json.self::$ROW_ITEM_OPEN.'"v":'.$this->rows[$i][$j].',"f":null'.self::$ROW_ITEM_CLOSE.$commaJ;
+                if($this->cols[$j]["type"] == self::$TYPE_STRING){
+                    $stringMark = "\"";
+                }else{
+                    $stringMark = "";
+                }
+                $json = $json.self::$ROW_ITEM_OPEN.'"v":'.$stringMark.$this->rows[$i][$j].$stringMark.',"f":null'.self::$ROW_ITEM_CLOSE.$commaJ;
             }
             $json = $json.self::$ROW_CLOSE.$commaI;
         }
 
         $json = $json.self::$ROWS_CLOSE.self::$JSON_CLOSE;
 
-
+        assertGoogleChartJSONValid($json);
         return $json;
     }
 
