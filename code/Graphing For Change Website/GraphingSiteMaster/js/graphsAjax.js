@@ -3,6 +3,7 @@ var maleHeatJson;
 var femaleHeatJson;
 var transHeatJson;
 var fakeYearlyViolenceJson;
+var shelterSoughtFAKEJson;
 var heatMaps = [];
 var numHeatMaps = 3;
 var heatMapsLoaded = 0;
@@ -16,6 +17,7 @@ google.charts.setOnLoadCallback(initGraphs);
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
   getDataViolenceGraph();
+  getDataShelterSoughtFAKE();
 }
 
 function getDataViolenceGraph() {
@@ -36,6 +38,25 @@ function getDataViolenceGraph() {
   }).responseText;
 }
 
+function getDataShelterSoughtFAKE(){
+    var data = new google.visualization.DataTable(shelterSoughtFAKEJson);
+
+    //Chart options
+    var options = {
+        title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
+        vAxis: { title: "Number of Violent Events" },
+        hAxis: { title: "Day" },
+        height: 800,
+        legend: { position: "none" },
+        colors: ["#000"]
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.LineChart(document.getElementById('shelterSoughtFAKEGraph'));
+
+    chart.draw(data, options);
+}
+
 function drawViolenceGraph() {
   console.log(fakeYearlyViolenceJson);
   var data = new google.visualization.DataTable(fakeYearlyViolenceJson);
@@ -54,6 +75,23 @@ function drawViolenceGraph() {
   var chart = new google.visualization.LineChart(document.getElementById('fakeViolenceGraph'));
 
   chart.draw(data, options);
+}
+function drawShelterSoughtGraphFAKE(){
+    $.ajax({
+        type: "POST",
+        url: "/api/shelterSoughtFAKE.php",
+        data: { req:"null" },
+        dataType: "json",
+        success: function(res){
+            console.log("Fake Yearly Shelter Sought Loaded");
+           shelterSoughtFAKEJson = res;
+            drawShelterSoughtGraphFAKE();
+        },
+        error: function(e) {
+            console.log("Fake Yearly Shelter Sought Error: " + e);
+        },
+        async: true
+    }).responseText;
 }
 
 //INIT AND DRAW MAPS HERE
