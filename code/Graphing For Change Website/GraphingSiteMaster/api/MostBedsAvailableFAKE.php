@@ -18,6 +18,7 @@ function randomUpTo($upperBound){
     return floor(random()*$upperBound);
 }
 
+//Create the max number of beds an organization supports, randomly
 function generateBedCapacities($upperBound, $lengthOfArray){
     $totalBeds = [];
     for($i = 0; $i < $lengthOfArray; $i++){
@@ -29,8 +30,12 @@ function generateBedCapacities($upperBound, $lengthOfArray){
 }
 
 //Mean is center, with probabilities decrease as we move away from center
-function generateBedsRemaining($totalCapacity){
-    return randomUpTo(randomUpTo($totalCapacity +1)+1);
+function generateBedsRemaining($totalBeds){
+    $bedsRemaining = [];
+    for($i = 0; $i<count($totalBeds); $i++){
+        $bedsRemaining[$i] = randomUpTo(randomUpTo($totalBeds[$i] +1)+1);
+    }
+    return $bedsRemaining;
 }
 
 
@@ -43,8 +48,10 @@ function sortByMostAvailable($orgs, $totalBeds, $availableBeds){
 
     for($i = 0; $i < count($totalBeds); $i++){
         for($j = 1; $j <=$i; $j++){
-            if($availableBeds[$j] < $availableBeds[$j-1]){
-                swap
+            if($availableBeds[$j] > $availableBeds[$j-1]){
+                swap($availableBeds, $j, $j-1);
+                swap($totalBeds, $j, $j-1);
+                swap($orgs, $j, $j-1);
             }
         }
     }
@@ -75,5 +82,18 @@ $jsonGen->addCol(array("name"=>"Organization","type"=>"string"));
 $jsonGen->addCol(array("name"=>"Total Beds","type"=>"number"));
 $jsonGen->addCol(array("name"=>"Beds Available","type"=>"number"));
 
+$MAX_BEDS_ALLOWED = 50;
+$totalBeds = generateBedCapacities($MAX_BEDS_ALLOWED, count($fakeOrgs));
+$availableBeds = generateBedsRemaining($totalBeds);
+
+sortByMostAvailable($fakeOrgs, $totalBeds, $availableBeds);
+
+for($i = 0; $i < count($fakeOrgs); $i++){
+$jsonGen->addRow(array(
+    0=>$fakeOrgs[$i],
+    1=>$totalBeds[$i],
+    2=>$availableBeds[$i]
+));}
 
 
+echo $jsonGen->getJson();

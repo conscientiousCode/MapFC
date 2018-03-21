@@ -38,24 +38,6 @@ function getDataViolenceGraph() {
   }).responseText;
 }
 
-function getDataShelterSoughtFAKE(){
-    var data = new google.visualization.DataTable(shelterSoughtFAKEJson);
-
-    //Chart options
-    var options = {
-        title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
-        vAxis: { title: "Number of Violent Events" },
-        hAxis: { title: "Day" },
-        height: 800,
-        legend: { position: "none" },
-        colors: ["#000"]
-    };
-
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.LineChart(document.getElementById('shelterSoughtFAKEGraph'));
-
-    chart.draw(data, options);
-}
 
 function drawViolenceGraph() {
   console.log(fakeYearlyViolenceJson);
@@ -76,15 +58,15 @@ function drawViolenceGraph() {
 
   chart.draw(data, options);
 }
-function drawShelterSoughtGraphFAKE(){
+function getDataShelterSoughtFAKE(){
     $.ajax({
         type: "POST",
-        url: "/api/shelterSoughtFAKE.php",
+        url: "/api/ShelterSoughtFAKE.php",
         data: { req:"null" },
         dataType: "json",
         success: function(res){
             console.log("Fake Yearly Shelter Sought Loaded");
-           shelterSoughtFAKEJson = res;
+            shelterSoughtFAKEJson = res;
             drawShelterSoughtGraphFAKE();
         },
         error: function(e) {
@@ -93,6 +75,26 @@ function drawShelterSoughtGraphFAKE(){
         async: true
     }).responseText;
 }
+
+function drawShelterSoughtGraphFAKE(){
+    var data = new google.visualization.DataTable(shelterSoughtFAKEJson);
+
+    //Chart options
+    var options = {
+        title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
+        vAxis: { title: "Shelter Beds" },
+        hAxis: { title: "Day" },
+        height: 800,
+        legend: { position: "none" },
+        colors: ["#000"]
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.LineChart(document.getElementById('shelterSoughtFAKEGraph'));
+
+    chart.draw(data, options);
+}
+
 
 //INIT AND DRAW MAPS HERE
 function initMaps() {

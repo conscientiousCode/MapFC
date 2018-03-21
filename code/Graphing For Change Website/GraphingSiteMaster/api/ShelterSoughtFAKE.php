@@ -13,7 +13,7 @@ include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/JsonValidator.php';
 function waitListDistribution($day,$spread){
     $centre = 365;
     $centreNext = (-1)*(365-$centre);
-    return exp(-$spread*pow($day-$centre,2)) + exp(-$spread*pow($day-$centreNext,2));
+    return exp(-$spread*pow($day -$centre,2)) + exp(-$spread*pow($day-$centreNext,2));
 }
 
 function random(){
@@ -21,11 +21,11 @@ function random(){
 }
 
 function waitList($day,$perterbation,$population, $spread){
-    return floor(waitListDistribution($day,$spread)*($perterbation + random())*$population);
+    return floor(waitListDistribution($day,$spread)*(0.5+ $perterbation*random()*0.5)*$population);
 }
 
 $shelterDesireRate = 1/10;
-$fluctuationPerDay = 1/30;
+$fluctuationPerDay = 1/40;
 $population = 1500;
 
 $winterSol = new WinterDistribution($shelterDesireRate, $fluctuationPerDay, $population);
@@ -40,10 +40,9 @@ for($i = 1; $i <= 365; $i++){
     $row = array(
         0=> $i,
         1=> $winterSol->valueForDay($i),
-        2=> waitList($i, 1/500, $population, 20)
+        2=> waitList($i, 1/3, $population/5, 1/500) + 20+10*random()
     );
     //echo $row[0]."\n".$row[1]."\n";
-
     $jsonFormatter->addRow($row);
 }
 
