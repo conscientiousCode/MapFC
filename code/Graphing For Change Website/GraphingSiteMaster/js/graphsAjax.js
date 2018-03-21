@@ -120,7 +120,8 @@ function drawMostBedsAvailableFAKE(){
     var options = {
         title: "Service Providrs and Bed Availability",
         sortColumn: 2,
-        sortAscending: false
+        sortAscending: false,
+        width: 800
     };
 
     // Instantiate and draw our chart, passing in some options.
