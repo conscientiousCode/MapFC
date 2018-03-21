@@ -7,14 +7,14 @@ var numHeatMaps = 3;
 var heatMapsLoaded = 0;
 //RANK MAP GLOBALS
 var rankMapJSON;
-
+var histoJSON;
 // Load the Visualization API and set callback on load
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  
+  drawHistogram();
 }
 
 //INIT AND DRAW MAPS HERE
@@ -153,9 +153,6 @@ function initRankMap() {
       throw "Rank Data is not JSON";
     }
     
-    if(typeof heatMapJSON == 'string') {
-      rankMapJSON = JSON.parse(heatMaps[i][0]);
-    }
     
     var map = new google.maps.Map(document.getElementById('serviceRank'), {
       zoom: 12,
@@ -166,14 +163,14 @@ function initRankMap() {
     
     for(var i = 0; i < Object.keys(rankMapJSON).length; i++) {
       var score = rankMapJSON[i]['score'];
-      if(score <= 2.5) {
-        var color = "#FF0000";
-      } else if(score > 2.5 && score <= 5) {
-        var color = "#FF8000";
-      } else if(score > 5 && score <= 7.5) {
-        var color = "#FFFF00";
-      } else if(score > 7.5) {
-        var color = "#00FF00";
+      if(score <= 0.5) {
+        var color = "#FFFFFF";
+      } else if(score > 0.5 && score <= 1) {
+        var color = "#9999ff";
+      } else if(score > 1 && score <= 2) {
+        var color = "#5b5bff";
+      } else if(score > 2) {
+        var color = "#000088";
       }
       
       console.log(score + " " + color);
@@ -192,4 +189,66 @@ function initRankMap() {
   } catch(e) {
     console.log("RANK MAP INIT ERROR: " + e);
   }
+}
+function drawHistogram(){
+      $.ajax({
+    type: "POST",
+    url: "/api/linearRankedComboGraph.php",
+    data: {},
+    dataType: "json",
+    success: function(res){
+      console.log("Rank Map Loaded");
+      histoJSON = res;
+      initHisto();
+    },
+    error: function(e) {
+      console.log("HistoGraph Error: " + e);
+    },
+    async: true
+  }).responseText;
+    
+}
+
+function initHisto(){
+      try {
+    if(typeof histoJSON != 'object' || histoJSON == null) {
+      throw "Rank Data is not JSON";
+    }
+    var no = 0;
+    var min = 0;
+    var med = 0;
+    var strong = 0;
+    var very = 0;
+    var data = [];
+    var dataname = ['Amount of Support','Count'];
+    data.push(dataname);
+    for(var i =0; i< Object.keys(histoJSON).length;i++){
+        var score = histoJSON[i]['score'];
+      if(score == 0) {
+        no++;
+      } else if( score <= 1) {
+        min++;
+      } else if( score <= 2) {
+        med++;
+      } else if(score<=3) {
+        strong++;
+      }else{
+        very++;
+      }
+    }
+    data.push(['No Support',no]);
+    data.push(['Minimal Support',min]);
+    data.push(['Medium Support',med]);
+    data.push(['Strong Support',strong]);
+    data.push(['Very Strong Support',very]);
+    var googledata = google.visualization.arrayToDataTable(data);
+    var options ={
+      legend: {position:'none'},
+      vAxis: {title:'Count'}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById('rankedHisto'));
+    chart.draw(googledata,options);
+      }catch(e){
+        console.log("Ranked Histo Error: "+e);
+      }
 }
