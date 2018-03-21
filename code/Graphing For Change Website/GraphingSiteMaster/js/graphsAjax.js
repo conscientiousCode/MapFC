@@ -4,6 +4,7 @@ var femaleHeatJson;
 var transHeatJson;
 var fakeYearlyViolenceJson;
 var shelterSoughtFAKEJson;
+var mostBedsAvailableFAKEJson;
 var heatMaps = [];
 var numHeatMaps = 3;
 var heatMapsLoaded = 0;
@@ -11,13 +12,14 @@ var heatMapsLoaded = 0;
 var rankMapJSON;
 
 // Load the Visualization API and set callback on load
-google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', {'packages':['corechart', 'table']});
 google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
   getDataViolenceGraph();
   getDataShelterSoughtFAKE();
+  getDataMostBedsAvailableFAKE();
 }
 
 function getDataViolenceGraph() {
@@ -48,7 +50,6 @@ function drawViolenceGraph() {
       title: "Violent Incidents (FAKE DATA)",
       vAxis: { title: "Number of Violent Events" },
       hAxis: { title: "Day" },
-      height: 800,
       legend: { position: "none" },
       colors: ["#000"]
   };
@@ -84,13 +85,46 @@ function drawShelterSoughtGraphFAKE(){
         title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
         vAxis: { title: "Shelter Beds" },
         hAxis: { title: "Day" },
-        height: 800,
         legend: { position: "none" },
         colors: ["#000"]
     };
 
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.LineChart(document.getElementById('shelterSoughtFAKEGraph'));
+
+    chart.draw(data, options);
+}
+
+function getDataMostBedsAvailableFAKE(){
+    $.ajax({
+        type: "POST",
+        url: "/api/MostBedsAvailableFAKE.php",
+        data: { req:"null" },
+        dataType: "json",
+        success: function(res){
+            console.log("Fake Beds Availability Loaded");
+            mostBedsAvailableFAKEJson = res;
+            drawMostBedsAvailableFAKE();
+        },
+        error: function(e) {
+            console.log("Fake Beds Availability Error: " + e);
+        },
+        async: true
+    }).responseText;
+}
+
+function drawMostBedsAvailableFAKE(){
+    var data = new google.visualization.DataTable(mostBedsAvailableFAKEJson);
+
+    //Chart options
+    var options = {
+        title: "Service Providrs and Bed Availability",
+        sortColumn: 2,
+        sortAscending: false
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.Table(document.getElementById('mostBedsAvailableFAKEGraph'));
 
     chart.draw(data, options);
 }
