@@ -6,4 +6,9 @@
       <path value="D:\Program Files\PHP-5.6.3" />
     </include_path>
   </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings load_method="PHPUNIT_PHAR" custom_loader_path="" phpunit_phar_path="$PROJECT_DIR$/../../../../../phpunit.phar" />
+    </phpunit_settings>
+  </component>
 </project>
