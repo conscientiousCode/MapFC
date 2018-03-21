@@ -16,7 +16,7 @@ google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  //getDataViolenceGraph();
+  getDataViolenceGraph();
   getDataShelterSoughtFAKE();
 }
 
@@ -84,12 +84,8 @@ function drawShelterSoughtGraphFAKE(){
         title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
         vAxis: { title: "Shelter Beds" },
         hAxis: { title: "Day" },
-        series:{
-            0: { color: '#000000' },
-            1: { color: '#d36907' }
-        },
-        legend: { position: 'bottom' },
         height: 800,
+        legend: { position: "none" },
         colors: ["#000"]
     };
 
