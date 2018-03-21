@@ -166,14 +166,14 @@ function initRankMap() {
     
     for(var i = 0; i < Object.keys(rankMapJSON).length; i++) {
       var score = rankMapJSON[i]['score'];
-      if(score <= 2.5) {
-        var color = "#FF0000";
-      } else if(score > 2.5 && score <= 5) {
-        var color = "#FF8000";
-      } else if(score > 5 && score <= 7.5) {
-        var color = "#FFFF00";
-      } else if(score > 7.5) {
-        var color = "#00FF00";
+      if(score <= 0.5) {
+        var color = "#FFFFFF";
+      } else if(score > 0.5 && score <= 1) {
+        var color = "#9999ff";
+      } else if(score > 1 && score <= 2) {
+        var color = "#5b5bff";
+      } else if(score > 2) {
+        var color = "#000088";
       }
       
       console.log(score + " " + color);
