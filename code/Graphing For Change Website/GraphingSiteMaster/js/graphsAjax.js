@@ -85,8 +85,10 @@ function drawShelterSoughtGraphFAKE(){
         title: "Number of People Seeking Shelter vs Waitlist (FAKE DATA)",
         vAxis: { title: "Shelter Beds" },
         hAxis: { title: "Day" },
-        legend: { position: "none" },
-        colors: ["#000"]
+        legend: { position: "bottom" },
+        series:{
+            0: { color: '#000000' },
+            1: { color: '#e7711b' }}
     };
 
     // Instantiate and draw our chart, passing in some options.
