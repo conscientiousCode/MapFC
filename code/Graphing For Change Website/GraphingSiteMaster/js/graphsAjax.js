@@ -1,12 +1,13 @@
-//HEATMAP GLOBALS
+//JSON GLOBALS
 var maleHeatJson;
 var femaleHeatJson;
 var transHeatJson;
+var fakeYearlyViolenceJson;
 var heatMaps = [];
 var numHeatMaps = 3;
 var heatMapsLoaded = 0;
-//RANK MAP GLOBALS
 var rankMapJSON;
+var wordCloudArray;
 
 // Load the Visualization API and set callback on load
 google.charts.load('current', {'packages':['corechart']});
@@ -14,7 +15,111 @@ google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  
+  getDataViolenceGraph();
+  getAnalyticsGraphs();
+}
+
+function getAnalyticsGraphs() {
+  drawWordCloud();
+  drawLineChart();
+  drawPieChart();
+}
+
+function drawWordCloud() {
+  console.log(d3);
+  d3.wordcloud()
+  .size([800, 400])
+  .selector('#wordCloud')
+  .rotate(0)
+  .scale('log')
+  .font("sans-serif")
+  .words([{text: 'shelter', size: 8},
+          {text: 'shared', size: 6}, 
+          {text: 'women', size: 8}, 
+          {text: 'transitional', size: 7}, 
+          {text: 'care', size: 7}, 
+          {text: 'support', size: 5}, 
+          {text: 'youth', size: 7}, 
+          {text: 'the', size: 5}])
+  .start();
+}
+
+function drawLineChart() {
+  var data = google.visualization.arrayToDataTable([
+    ['Month', 'Views'],
+    ['April',  1000],
+    ['May',  1170],
+    ['June',  660],
+    ['July',  1030],
+    ['August',  930],
+    ['September',  1200],
+    ['November',  1356],
+    ['December',  1732],
+    ['January', 1654]
+  ]);
+
+  var options = {
+    hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
+    vAxis: {minValue: 0},
+    pointsVisible: true,
+    colors: ['rgb(33,150,243)']
+  };
+
+  var chart = new google.visualization.AreaChart(document.getElementById('viewCount'));
+  chart.draw(data, options);
+}
+
+function drawPieChart() {
+  var data = google.visualization.arrayToDataTable([
+    ['Visitor Type', 'Percentage'],
+    ['Returning Visitor', 26.09],
+    ['New Visitor', 73.91]
+  ]);
+
+  var options = {
+    colors: ['#b3d4fc', 'rgb(33, 150, 243)']
+  };
+
+  var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+
+  chart.draw(data, options);
+}
+
+function getDataViolenceGraph() {
+  $.ajax({
+      type: "POST",
+      url: "/api/violenceOverYearFAKE.php",
+      data: { req:"null" },
+      dataType: "json",
+      success: function(res){
+          console.log("Fake Yearly Violence Loaded");
+          fakeYearlyViolenceJson = res;
+          drawViolenceGraph();
+      },
+      error: function(e) {
+          console.log("Fake Yearly Violence Error: " + e);
+      },
+      async: true
+  }).responseText;
+}
+
+function drawViolenceGraph() {
+  var data = new google.visualization.DataTable(fakeYearlyViolenceJson);
+
+  //Chart options
+  var options = {
+      title: "Violent Incidents (FAKE DATA)",
+      vAxis: { title: "Number of Violent Events" },
+      hAxis: { title: "Day" },
+      height: 800,
+      legend: { position: "none" },
+      colors: ["#000"]
+  };
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.LineChart(document.getElementById('fakeViolenceGraph'));
+
+  chart.draw(data, options);
 }
 
 //INIT AND DRAW MAPS HERE
@@ -39,6 +144,7 @@ function drawHeatMaps() {
     },
     async: true
   }).responseText;
+
   $.ajax({
     type: "POST",
     url: "/api/ServicesForGenders.php",
@@ -54,6 +160,7 @@ function drawHeatMaps() {
     },
     async: true
   }).responseText;
+
   $.ajax({
     type: "POST",
     url: "/api/ServicesForGenders.php",
@@ -153,10 +260,6 @@ function initRankMap() {
       throw "Rank Data is not JSON";
     }
     
-    if(typeof heatMapJSON == 'string') {
-      rankMapJSON = JSON.parse(heatMaps[i][0]);
-    }
-    
     var map = new google.maps.Map(document.getElementById('serviceRank'), {
       zoom: 12,
       center: {lat: 49.886553, lng: -119.469810},
@@ -175,8 +278,6 @@ function initRankMap() {
       } else if(score > 7.5) {
         var color = "#00FF00";
       }
-      
-      console.log(score + " " + color);
       
       var siteCircle = new google.maps.Circle({
         strokeColor: color,
