@@ -152,43 +152,80 @@ function initRankMap() {
     if(typeof rankMapJSON != 'object' || rankMapJSON == null) {
       throw "Rank Data is not JSON";
     }
-    
-    if(typeof heatMapJSON == 'string') {
-      rankMapJSON = JSON.parse(heatMaps[i][0]);
-    }
-    
+
     var map = new google.maps.Map(document.getElementById('serviceRank'), {
       zoom: 12,
       center: {lat: 49.886553, lng: -119.469810},
       gestureHandling: 'cooperative',
       mapTypeId: google.maps.MapTypeId.HYBRID
     });
-    
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var markers = [[],[],[],[]];
     for(var i = 0; i < Object.keys(rankMapJSON).length; i++) {
       var score = rankMapJSON[i]['score'];
       if(score <= 0.5) {
         var color = "#FFFFFF";
+        var marker = 0;
       } else if(score > 0.5 && score <= 1) {
         var color = "#9999ff";
+        var marker = 1;
       } else if(score > 1 && score <= 2) {
         var color = "#5b5bff";
+        var marker = 2;
       } else if(score > 2) {
         var color = "#000088";
+        var marker = 3;
       }
-      
+
       console.log(score + " " + color);
-      
-      var siteCircle = new google.maps.Circle({
-        strokeColor: color,
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: color,
-        fillOpacity: 1.0,
-        map: map,
-        center: {lat:rankMapJSON[i]['lon'], lng:rankMapJSON[i]['lat']},
-        radius: 100
-      });
+
+      markers[marker].push(new google.maps.Marker({
+          position: {lat:rankMapJSON[i]['lon'], lng:rankMapJSON[i]['lat']},
+          map: map,
+          icon: 'imgs/icon_'+ (marker+1) + '.png'
+      }));
     }
+    for(var k = 0; k < markers.length; k++) {
+      var clusterStyle = [{
+        url: 'http://localhost/imgs/cluster_'+ (k+1) +'.png',
+        width: 53,
+        height: 52
+      }];
+
+      if((k+1) == 4)
+        clusterStyle[0]['textColor'] = 'white';
+
+      var markerCluster = new MarkerClusterer(map, markers[k],
+            {styles: clusterStyle});
+    }
+
+    var legendIcons = {
+        1: {
+          name: 'Fewest Resources',
+          url: 'imgs/icon_1.png'
+        },
+        2: {
+          name: 'Few Resources',
+          url: 'imgs/icon_2.png'
+        },
+        3: {
+          name: 'Moderate Resources',
+          url: 'imgs/icon_3.png'
+        },
+        4: {
+          name: 'Most Resources',
+          url: 'imgs/icon_4.png'
+        }
+      };
+
+    var legend = document.getElementById('category-legend');
+    for(var item in legendIcons) {
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="'+ legendIcons[item].url +'" alt="'+ legendIcons[item].name +'"> ' + legendIcons[item].name;
+        legend.appendChild(div);
+    }
+
+    map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
   } catch(e) {
     console.log("RANK MAP INIT ERROR: " + e);
   }
