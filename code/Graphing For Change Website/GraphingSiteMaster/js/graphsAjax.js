@@ -1,5 +1,5 @@
 //HEATMAP GLOBALS
-var maleHeatJson;
+var servicesHeatJson;
 var femaleHeatJson;
 var transHeatJson;
 var heatMaps = [];
@@ -42,15 +42,15 @@ function drawHeatMaps() {
   $.ajax({
     type: "POST",
     url: "/api/ServicesForGenders.php",
-    data: { req:"male" },
+    data: { req:"all" },
     dataType: "json",
     success: function(res){
-      console.log("Male HeatMap Loaded");
-      maleHeatJson = res;
+      console.log("Services HeatMap Loaded");
+      servicesHeatJson = res;
       countHeatmaps();
     },
     error: function(e) {
-      console.log("Male Heatmap Error: " + e);
+      console.log("Heatmap Error: " + e);
     },
     async: true
   }).responseText;
@@ -76,7 +76,7 @@ function countHeatmaps() {
   heatMapsLoaded++
   if(heatMapsLoaded == numHeatMaps) {
     heatMaps.push([femaleHeatJson, "femaleHeatmap"]);
-    heatMaps.push([maleHeatJson, "maleHeatmap"]);
+    heatMaps.push([servicesHeatJson, "servicesHeatmap"]);
     heatMaps.push([transHeatJson, "transHeatmap"]);
 
     initHeatMaps();

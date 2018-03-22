@@ -19,15 +19,15 @@ if(isset($_POST["req"])) {
 
     //Preparing the statement based on req type
     //Check if 'teamInfo' was POSTed
-    if(strcmp($_POST["req"], "male") == 0) {
+    if(strcmp($_POST["req"], "all") == 0) {
         //If so, we send all info on the team member
-        $sql = "select orgID, geoLocation from Organization where orgID in (Select orgId from Demographic where male = true)";
+        $sql = "select orgID, geoLocation from Organization";
         $stmt = $conn->prepare($sql);
 
     } else if (strcmp($_POST["req"], "female") == 0) {
         //Also check if power leves were requested, if so
         //we serve up the power levels and associated names.
-        $sql = "select orgID, geoLocation from Organization where orgID in (Select orgId from Demographic where female = true)";
+        $sql = "select orgID, geoLocation from Organization where orgID in (Select orgId from Demographic where female = true AND male = false AND transgender = false)";
         $stmt = $conn->prepare($sql);
     } else if (strcmp($_POST["req"], "transgender") == 0) {
         //Also check if power leves were requested, if so
