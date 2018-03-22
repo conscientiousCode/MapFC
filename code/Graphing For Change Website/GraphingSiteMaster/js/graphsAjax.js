@@ -17,7 +17,7 @@ google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  getDataViolenceGraph();
+  //getDataViolenceGraph();
   getDataShelterSoughtFAKE();
   getDataMostBedsAvailableFAKE();
   getAnalyticsGraphs();
