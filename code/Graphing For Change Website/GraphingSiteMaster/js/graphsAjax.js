@@ -30,7 +30,8 @@ function getAnalyticsGraphs() {
 }
 
 function drawWordCloud() {
-  console.log(d3);
+  color = d3.scale.linear().domain([-1, 0, 1]).range(["#777777", "#c7dff9", "#4896ec"]);
+
   d3.wordcloud()
   .size([800, 400])
   .selector('#wordCloud')
