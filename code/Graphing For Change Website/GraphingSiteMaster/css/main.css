@@ -162,3 +162,26 @@
   width: 90%;
   height: 30em;
 }
+
+/* Chart Legend
+   https://developers.google.com/maps/documentation/javascript/adding-a-legend
+ */
+#map {
+  height: 400px;
+  width: 100%;
+}
+#category-legend {
+  text-align:left;
+  font-size: 13px;
+  background: #dddddd;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+#category-legend h3 {
+  margin-top: 0;
+  font-size: 28px;
+}
+#category-legend img {
+  vertical-align: middle;
+}
