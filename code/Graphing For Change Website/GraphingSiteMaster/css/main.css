@@ -101,6 +101,8 @@
   padding: 0;
   margin: 0;
   padding-left: 3em;
+  margin-bottom: 0.7em;
+  line-height: 1.3em;
 }
 
 .mdl-layout__drawer ul li:nth-child(1) a {
@@ -137,6 +139,7 @@
   color: #777;
   font-weight: 300;
   border-bottom: 1px solid #777;
+  margin-bottom: 0.5em;
 }
 
 .report>h2 {
@@ -158,4 +161,27 @@
   display: inline-block;
   width: 90%;
   height: 30em;
+}
+
+/* Chart Legend
+   https://developers.google.com/maps/documentation/javascript/adding-a-legend
+ */
+#map {
+  height: 400px;
+  width: 100%;
+}
+#category-legend {
+  text-align:left;
+  font-size: 13px;
+  background: #dddddd;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+#category-legend h3 {
+  margin-top: 0;
+  font-size: 28px;
+}
+#category-legend img {
+  vertical-align: middle;
 }

@@ -15,9 +15,14 @@
   <!-- Please note the graphsAjax.js This is the file you will put -->
   <!-- your AJAX requests and graph generation code. -->
   <!--*************************************************************-->
+  <script src="js/d3.min.js"></script>
+  <script src="js/d3.layout.cloud.js"></script>
+  <script src="js/d3.wordcloud.js"></script>
+  <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
   <script type="text/javascript" src="js/graphsAjax.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6Wj6mZyMCcPEZiTiKm1PaP-69hvRj1HM&libraries=visualization&callback=initMaps"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
   <link rel="icon" type="image/png" href="favicon.png">
   <title>Graphing for Change</title>
 </head>
@@ -78,9 +83,28 @@
             <div class="graph-display" id="femaleHeatmap"></div>
             <h2 id="transHeat">Transgender Demographic Services HeatMap</h2>
             <div class="graph-display" id="transHeatmap"></div>
+            
             <h1 id="servGraphs">Services Graphs</h1>
             <h2 id="servRanked">Service Ranking Diagram</h2>
             <div class="graph-display" id="serviceRank"></div>
+			<div id="category-legend"><h3>Legend</h3></div>
+			<h2 id="hist">Support Distribution</h2>
+            <div class="graph-display" id="rankedHisto"></div>
+            <h1>Rank Graphs</h1>
+           <!-- <h2 id="fakeViolence">Ranking Violence Over Time</h2>
+            <div class="graph-display" id="fakeViolenceGraph"></div>-->
+            <h2 id="shelterSoughtFAKE">Shelter Availability</h2>
+            <div class="graph-display" id="shelterSoughtFAKEGraph"></div>
+            <h2 id="mostBedsAvailableFAKE">Bed Availability</h2>
+            <div class="graph-display" id="mostBedsAvailableFAKEGraph"></div>
+
+            <h1>Site Analytics Graphs</h1>
+            <h2 id="analyticWordCloud">Search Term WordCloud (EXAMPLE)</h2>
+            <div class="graph-display" id="wordCloud"></div>
+            <h2 id="analyticWordCloud">View Count Per Month (EXAMPLE)</h2>
+            <div class="graph-display" id="viewCount"></div>
+            <h2 id="analyticWordCloud">User Breakdown (EXAMPLE)</h2>
+            <div class="graph-display" id="pieChart"></div>
           </section>
         </div>
         <!--*************************************************************-->

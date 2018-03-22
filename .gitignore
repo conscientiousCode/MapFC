@@ -1,2 +1,9 @@
 /res/Knowledge/REST/AJAX_REST_Example/GraphingSite/api/config/*
-/.idea
+*/.idea
+/code/Graphing For Change Website/GraphingSiteMaster/.idea/php-test-framework.xml
+/code/Graphing For Change Website/GraphingSiteMaster/.idea
+*/code/Graphing For Change Website/GraphingSiteMaster/.idea/*
+.DS_Store
+.idea/*
+.idea/
+
