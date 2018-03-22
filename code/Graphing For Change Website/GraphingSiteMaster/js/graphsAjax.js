@@ -7,14 +7,14 @@ var numHeatMaps = 3;
 var heatMapsLoaded = 0;
 //RANK MAP GLOBALS
 var rankMapJSON;
-
+var histoJSON;
 // Load the Visualization API and set callback on load
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(initGraphs);
 
 //INIT AND DRAW GRAPHS HERE
 function initGraphs() {
-  
+  drawHistogram();
 }
 
 //INIT AND DRAW MAPS HERE
@@ -229,4 +229,66 @@ function initRankMap() {
   } catch(e) {
     console.log("RANK MAP INIT ERROR: " + e);
   }
+}
+function drawHistogram(){
+      $.ajax({
+    type: "POST",
+    url: "/api/linearRankedComboGraph.php",
+    data: {},
+    dataType: "json",
+    success: function(res){
+      console.log("Rank Map Loaded");
+      histoJSON = res;
+      initHisto();
+    },
+    error: function(e) {
+      console.log("HistoGraph Error: " + e);
+    },
+    async: true
+  }).responseText;
+    
+}
+
+function initHisto(){
+      try {
+    if(typeof histoJSON != 'object' || histoJSON == null) {
+      throw "Rank Data is not JSON";
+    }
+    var no = 0;
+    var min = 0;
+    var med = 0;
+    var strong = 0;
+    var very = 0;
+    var data = [];
+    var dataname = ['Amount of Support','Count'];
+    data.push(dataname);
+    for(var i =0; i< Object.keys(histoJSON).length;i++){
+        var score = histoJSON[i]['score'];
+      if(score == 0) {
+        no++;
+      } else if( score <= 1) {
+        min++;
+      } else if( score <= 2) {
+        med++;
+      } else if(score<=3) {
+        strong++;
+      }else{
+        very++;
+      }
+    }
+    data.push(['No Support',no]);
+    data.push(['Minimal Support',min]);
+    data.push(['Medium Support',med]);
+    data.push(['Strong Support',strong]);
+    data.push(['Very Strong Support',very]);
+    var googledata = google.visualization.arrayToDataTable(data);
+    var options ={
+      legend: {position:'none'},
+      vAxis: {title:'Count'}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById('rankedHisto'));
+    chart.draw(googledata,options);
+      }catch(e){
+        console.log("Ranked Histo Error: "+e);
+      }
 }
