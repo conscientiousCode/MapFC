@@ -24,7 +24,7 @@ function generateBedCapacities($upperBound, $lengthOfArray){
     for($i = 0; $i < $lengthOfArray; $i++){
         do{
             $totalBeds[$i] = randomUpTo($upperBound+1);
-        }while($totalBeds == 0);
+        }while($totalBeds[$i] == 0);
     }
     return $totalBeds;
 }
