@@ -372,7 +372,7 @@ function initRankMap() {
     }
     for(var k = 0; k < markers.length; k++) {
       var clusterStyle = [{
-        url: 'http://localhost/imgs/cluster_'+ (k+1) +'.png',
+        url: 'imgs/cluster_'+ (k+1) +'.png',
         width: 53,
         height: 52
       }];
