@@ -6,6 +6,7 @@
  * Time: 9:38 AM
  */
 include_once 'AnnualDistribution.php';
+include_once __dir__.'/../Random.php';
 
 class WinterDistribution implements AnnualDistribution
 {
@@ -19,10 +20,6 @@ class WinterDistribution implements AnnualDistribution
         $this->N = $population;
     }
 
-    protected function random(){
-        return mt_rand()/mt_getrandmax();
-    }
-
     public function valueForDay($day)
     {
 
@@ -31,7 +28,7 @@ class WinterDistribution implements AnnualDistribution
         }
 
         //(floor($N*($baseProb + random()*upperPerterb)*solsticeDayModifier))
-        return floor($this->N*($this->baseProb + $this->random()*$this->upperProbPerterbation)*self::winterDistribution($day));
+        return floor($this->N*($this->baseProb + random()*$this->upperProbPerterbation)*self::winterDistribution($day));
     }
 
     //bellcurve centered at the winter solstice, ranges from 1 to 2

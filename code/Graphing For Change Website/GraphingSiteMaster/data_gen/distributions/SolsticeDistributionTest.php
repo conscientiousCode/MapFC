@@ -6,12 +6,17 @@
  * Time: 9:57 PM
  */
 
-include_once 'SolsticeDistribution.php';
+include_once __dir__.'/SolsticeDistribution.php';
+echo __dir__."/../Random.php\n";
+include_once __dir__.'/../Random.php';
+
+
 
 
 
 class SolsticeDistributionTest extends PHPUnit_Framework_TestCase
 {
+
 
     public function testValueOf(){
         $base = 1/20;

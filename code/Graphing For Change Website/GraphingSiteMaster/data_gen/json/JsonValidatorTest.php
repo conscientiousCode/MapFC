@@ -6,7 +6,7 @@
  * Time: 1:01 AM
  */
 
-require 'ParseCell.php';
+require __dir__.'/JsonValidator.php';
 
 class JsonValidatorTest extends PHPUnit_Framework_TestCase
 {

@@ -1,0 +1,9 @@
+<phpunit>
+  <testsuites>
+    <testsuite name="data_gen">
+      <directory suffix="Test.php">../data_gen/distributions</directory>
+	  <directory suffix="Test.php">../data_gen</directory>
+	  
+    </testsuite>
+  </testsuites>
+</phpunit>

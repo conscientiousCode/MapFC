@@ -7,6 +7,10 @@
  */
 
 include_once 'AnnualDistribution.php';
+//include_once $_SERVER['DOCUMENT_ROOT'].'/data_gen/Random.php';
+include_once __dir__.'/../Random.php';
+//include_once '../Random.php';
+
 
 class SolsticeDistribution implements AnnualDistribution
 {
@@ -20,11 +24,6 @@ class SolsticeDistribution implements AnnualDistribution
         $this->N = $population;
     }
 
-    //Random number between 0 and 1
-    protected function random(){
-        return mt_rand()/mt_getrandmax();
-    }
-
     //This distribution is bi modal with peaks ~= 1 at $x = 172, 355
     //Perterbation taken into account
     public function valueForDay($day)
@@ -34,7 +33,7 @@ class SolsticeDistribution implements AnnualDistribution
         }
 
         //(floor($N*($baseProb + random()*upperPerterb)*solsticeDayModifier))
-        return floor($this->N*($this->baseProb + $this->random()*$this->upperProbPerterbation)*self::solsticeDistribution($day));
+        return floor($this->N*($this->baseProb + random()*$this->upperProbPerterbation)*self::solsticeDistribution($day));
     }
 
     //Function ranges from ~1.0004 to ~2, with peaks at the summer and winter solstic, day 172, 355

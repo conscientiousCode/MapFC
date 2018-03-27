@@ -8,6 +8,7 @@
 
 include_once 'WinterDistribution.php';
 
+
 class WinterDistributionTest extends PHPUnit_Framework_TestCase
 {
     public function testValueOf(){
