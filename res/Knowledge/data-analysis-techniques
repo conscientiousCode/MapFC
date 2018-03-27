@@ -1,8 +1,0 @@
-Item Tree Analysis (Hierarchical data analysis):
-	used to try and find dependencies among boolean data. May be good for our most complete data.
-	https://www.google.ca/url?sa=t&rct=j&q=&esrc=s&source=web&cd=6&cad=rja&uact=8&ved=0ahUKEwjH1aDIsPfYAhUP62MKHeLhDeAQFghMMAU&url=http%3A%2F%2Fpiaget.psycho.univ-paris5.fr%2F6juin2006%2FDegenne%2520%26%2520Lebeaux%2520-%2520Analyse%2520bool%25C3%25A9enne.pdf&usg=AOvVaw1_BOtjX86OhS1bH5HrFh9z
-	
-	It uses the idea of a 'preorder'/quasiorder:
-	https://en.wikipedia.org/wiki/Preorder
-	
-	

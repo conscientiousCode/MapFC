@@ -1,0 +1,40 @@
+This document is indtended to help developers get PHPUnit up and running
+NOTE: ALL TESTS SHOULD END WITH "Test.php" for this guide to be 100% accurate
+
+
+1. Getting PHPUnit
+	-Go and download the phpunit.phar file from the internet. (version 4.8.36 works)
+	-SAVE THIS FILE OUTSIDE OF THE GIT REPOSITORY or else we will be distributing it.
+
+2. Configuring PHPUnit
+	PHPUnit runs with a configuration file called 'phpunit.xml'.
+	Our phpunit.xml is in the root/config
+	NOTE: phpunit.xml specifies paths relative to its own file location
+		So to access the folders a layer up from config,
+		start your paths should look like ../pathFromFolderContainingPHPUnit.xml
+
+	- To Add a TestSuite:
+		Note, a TestSuite should only be created for a new logical component of the application
+		- Be in <testsuites></testsuites>
+		- Add in <testsuite name="yourNameHere"></testsuite>
+	- To Add a Directory:
+		-Be in a <testsuite></testsuite>
+		-Add in <directory suffix="Test.php">directoryPathFromPHPUnit.xmlLocation</directory>
+	- To Add a single file:
+		-Be in a <testsuite></testsuite>
+		-Add in <file>filePathFromPHPUnit.xmlLocation</file>
+
+3. Configuring PHPStorm
+	-Go to File>Settings>Languages & Frameworks>Test Frameworks
+		-change the top option to "Path to Php.phar"
+		- set "path to php.phar" to your path
+		-Under 'Test Runner' check "Default Configuration file" and point to phpunit.xml
+	-Create a new phpunit run configuration and check "TestScope: ... Defined in the Configuration file"
+	-Add path to your php library as required. (Fix at the bottom may appear, and you can click that)
+
+4. Writing Unit tests:
+	- See any intro video to writting tests with phpstorm
+
+Your tests should now run when it is select in PHPStorm
+
+
