@@ -34,6 +34,10 @@ NOTE: ALL TESTS SHOULD END WITH "Test.php" for this guide to be 100% accurate
 
 4. Writing Unit tests:
 	- See any intro video to writting tests with phpstorm
+	- Ensure your test classes end with "Test.php"
+	- to include other files in your tests, use relative pathing from the current folder:
+		i.e. __dir__.'/the path to your file from where this test is located'
+	- DO NOT write tests that are outside the document root for our website for now.
 
 Your tests should now run when it is select in PHPStorm
 
