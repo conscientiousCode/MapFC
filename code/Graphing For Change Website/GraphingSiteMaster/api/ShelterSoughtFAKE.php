@@ -7,6 +7,8 @@
  */
 
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/WinterDistribution.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/ShelterWaitlistDistribution.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/Random.php';
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/GoogleJsonFormatter.php';
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/JsonValidator.php';
 
@@ -30,6 +32,10 @@ $population = 1500;
 
 $winterSol = new WinterDistribution($shelterDesireRate, $fluctuationPerDay, $population);
 
+$waitlistProb = 1/30;
+$waitlistPerterbation = 1/50;
+$shelterWait = new ShelterWaitlistDistribution($waitlistProb, $waitlistPerterbation, $population);
+
 $jsonFormatter = new GoogleJsonFormatter();
 $jsonFormatter->addCol(array("name"=> "day", "type"=>"number"));//0
 $jsonFormatter->addCol(array("name"=> "seeking", "type"=>"number"));//1
@@ -41,6 +47,7 @@ for($i = 1; $i <= 365; $i++){
         0=> $i,
         1=> $winterSol->valueForDay($i),
         2=> waitList($i, 1/3, $population/5, 1/500) + 20+10*random()
+        //2=>$selterWait->valueForDay($i) +20+10*random();
     );
     //echo $row[0]."\n".$row[1]."\n";
     $jsonFormatter->addRow($row);
