@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 20/03/18
- * Time: 12:12 AM
- */
 
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/GoogleJsonFormatter.php';
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/json/JsonValidator.php';

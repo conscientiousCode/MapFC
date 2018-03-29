@@ -11,7 +11,6 @@ var heatMaps = [];
 var numHeatMaps = 3;
 var heatMapsLoaded = 0;
 var rankMapJSON;
-var wordCloudArray;
 var histoJSON;
 
 // Load the Visualization API and set callback on load
@@ -25,6 +24,12 @@ function initGraphs() {
   getDataMostBedsAvailableFAKE();
   getAnalyticsGraphs();
   drawHistogram();
+}
+
+//INIT AND DRAW MAPS HERE
+function initMaps() {
+  drawHeatMaps();
+  drawRankMaps();
 }
 
 function getAnalyticsGraphs() {
@@ -200,13 +205,6 @@ function drawMostBedsAvailableFAKE(){
     var chart = new google.visualization.Table(document.getElementById('mostBedsAvailableFAKEGraph'));
 
     chart.draw(data, options);
-}
-
-
-//INIT AND DRAW MAPS HERE
-function initMaps() {
-  drawHeatMaps();
-  drawRankMaps();
 }
 
 function drawHeatMaps() {

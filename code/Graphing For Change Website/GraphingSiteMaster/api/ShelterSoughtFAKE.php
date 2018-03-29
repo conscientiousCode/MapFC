@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 17/03/18
- * Time: 10:47 AM
- */
 
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/WinterDistribution.php';
 include_once $_SERVER["DOCUMENT_ROOT"].'/data_gen/distributions/ShelterWaitlistDistribution.php';
